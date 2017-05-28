@@ -1,0 +1,11 @@
+{
+  "name": "random-quotation-generator",
+  "version": "1.0.0",
+  "description": "A website that generates a random quote everytime a button is pressed.",
+  "main": "index.html",
+  "scripts": {
+    "test": ""
+  },
+  "author": "Evan Rupert",
+  "license": "MIT"
+}
