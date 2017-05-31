@@ -12,7 +12,7 @@ import Http
 --FIXME: in main.elm keep getting Http.NetworkError
 
 
---ERROR: No 'access-control-allow-origin' 
+--ERROR: No 'access-control-allow-origin'
 --look into ports in order to port the working jquery from https://codepen.io/dting/pen/PqrZgb?editors=1010
 
 
@@ -21,18 +21,18 @@ import Http
 --https://gist.github.com/groteck/e4cc180ac182436f31f1d709466df768
 
 
-type alias Model = 
+type alias Model =
     { quote : Quote
     , error : Maybe Http.Error
     }
 
 
-type Msg 
+type Msg
     = NewQuote (Result Http.Error Quote)
     | Request
 
 
-type alias Quote = 
+type alias Quote =
     { author : String
     , content : String
     }
@@ -69,22 +69,22 @@ view model =
 
 
 viewError : Model -> Html Msg
-viewError model = 
+viewError model =
     case model.error of
         Nothing ->
             p [] []
-        
-        Just error -> 
+
+        Just error ->
             case error of
-                Http.BadUrl s -> 
-                    p [ class "error" ] [ text <| "bad url: " ++ s ] 
-                
+                Http.BadUrl s ->
+                    p [ class "error" ] [ text <| "bad url: " ++ s ]
+
                 Http.Timeout ->
                     p [ class "error" ] [ text "network timeout" ]
-                
+
                 Http.NetworkError ->
                     p [ class "error" ] [ text "unknown network error" ]
-                
+
                 Http.BadStatus resp ->
                     p [ class "error" ] [ text <| "Bad status: " ++ resp.status.message ]
                 Http.BadPayload s resp ->
@@ -97,16 +97,16 @@ viewError model =
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update msg model = 
+update msg model =
     case msg of
         Request ->
             model ! [ getNewQuote ]
 
         NewQuote (Ok q) ->
             { model | quote = q } ! []
-        
-        NewQuote (Err error) -> 
-            { model 
+
+        NewQuote (Err error) ->
+            { model
             | quote = { author = "Error", content = "Error" }
             , error = Just error
             } ! []
@@ -116,36 +116,29 @@ update msg model =
 
 
 apiUrl : String
-apiUrl = "https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=jsonp&jsonp=?"
-
+apiUrl = "/getQuote" -- Local api calls can use relative urls
 
 --testing
 
 -- getNewQuote : Cmd Msg
--- getNewQuote = 
---     let 
+-- getNewQuote =
+--     let
 --         request = Http.get apiUrl Json.string
 --     in
 --         Http.send NewQuote request
 
 --testing
 
-getNewQuote : Cmd Msg 
-getNewQuote = 
-    let 
+getNewQuote : Cmd Msg
+getNewQuote =
+    let
         request = Http.get apiUrl decodeQuote
     in
         Http.send NewQuote request
 
 
 decodeQuote : Json.Decoder Quote
-decodeQuote = 
+decodeQuote =
     Json.map2 (\x y -> { author = x, content = y } )
         (Json.field "quoteAuthor" Json.string)
         (Json.field "quoteText" Json.string)
-
-
-
-
-
-

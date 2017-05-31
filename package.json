@@ -4,7 +4,7 @@
   "description": "A website that generates a random quote everytime a button is pressed.",
   "main": "index.html",
   "scripts": {
-    "test": ""
+    "start": "./build.sh && node server.js"
   },
   "author": "Evan Rupert",
   "license": "MIT"
